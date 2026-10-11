@@ -1,0 +1,12 @@
+# ==============================================================================
+# 35-iptv.caddy: IPTV Live TV Gateway & Playlist Proxy
+# Administrative Only - Restricted to group:admins and Local LAN
+# ==============================================================================
+
+iptv.{$TAILSCALE_DOMAIN:homeserver.ts.net}, iptv.home.arpa, iptv.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy iptv-proxy:8484
+}

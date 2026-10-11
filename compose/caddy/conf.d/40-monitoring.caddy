@@ -1,0 +1,40 @@
+# ==============================================================================
+# 40-monitoring.caddy: System Telemetry & Infrastructure Monitoring
+# Administrative Only - Restricted to group:admins and Local LAN
+# ==============================================================================
+
+# Uptime Kuma (Status & Monitoring)
+uptime.{$TAILSCALE_DOMAIN:homeserver.ts.net}, uptime.home.arpa, uptime.homeserver, status.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy uptime_kuma:3001
+}
+
+# AdGuard Home (DNS Filter Web UI)
+adguard.{$TAILSCALE_DOMAIN:homeserver.ts.net}, adguard.home.arpa, adguard.homeserver, dns.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy adguardhome:80
+}
+
+# Grafana (Visual Metrics Dashboard)
+grafana.{$TAILSCALE_DOMAIN:homeserver.ts.net}, grafana.home.arpa, grafana.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy grafana:3000
+}
+
+# Prometheus (Telemetry Engine Console)
+prometheus.{$TAILSCALE_DOMAIN:homeserver.ts.net}, prometheus.home.arpa, prometheus.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy prometheus:9090
+}

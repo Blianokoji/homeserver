@@ -1,0 +1,55 @@
+# ==============================================================================
+# Homeserver Repository .gitignore
+# ==============================================================================
+
+# Environment files and credentials
+*.env
+.env.*
+!**/.env.example
+!**/.env.*.example
+
+# Private cryptographic keys & certificates
+*.key
+*.pem
+*.pfx
+*.p12
+*.srl
+certs/*.key
+certs/root.key
+certs/wildcard.key
+
+# Databases and persistent storage data
+*.db
+*.sqlite
+*.sqlite3
+**/data/
+**/db/
+**/postgres/
+**/redis/
+**/meilisearch/
+**/cache/
+**/models/
+**/model-cache/
+**/spool/
+**/uploads/
+**/log/
+**/logs/
+*.log
+
+# Backups and temporary files
+*.bak
+*.tmp
+*~
+*.swp
+*.swo
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# OS specific files
+.DS_Store
+Thumbs.db

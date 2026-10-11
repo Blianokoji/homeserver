@@ -1,0 +1,15 @@
+use_default_settings: true
+general:
+  debug: false
+  instance_name: "Homeserver SearXNG"
+server:
+  secret_key: "replace_with_a_secure_random_key_for_searxng"
+  limiter: false
+  image_proxy: false
+search:
+  safe_search: 0
+  autocomplete: ""
+  default_lang: "en"
+  formats:
+    - html
+    - json

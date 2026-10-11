@@ -1,0 +1,23 @@
+services:
+  cups:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: homeserver/cups-airprint:latest
+    container_name: cups
+    restart: always
+    network_mode: host
+    privileged: true
+    environment:
+      - CUPS_USER=${CUPS_USER:-admin}
+      - CUPS_PASSWORD=${CUPS_PASSWORD:-admin}
+      - PRINTER_NAME=Epson_L3110
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/AppData/cups/config:/etc/cups
+      - /mnt/storage/AppData/cups/spool:/var/spool/cups
+      - /mnt/storage/AppData/cups/log:/var/log/cups
+      - /mnt/storage/AppData/cups/uploads:/uploads
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+      - /dev/bus/usb:/dev/bus/usb
+      - /dev/usb:/dev/usb

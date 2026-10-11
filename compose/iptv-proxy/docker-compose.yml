@@ -1,0 +1,22 @@
+name: iptv-proxy
+
+services:
+  iptv-proxy:
+    build: .
+    image: homeserver/iptv-proxy:latest
+    container_name: iptv-proxy
+    restart: always
+    ports:
+      - "8484:8484"
+    volumes:
+      - /mnt/storage/AppData/iptv-proxy/data:/app/data
+      - /mnt/storage/AppData/iptv-proxy/app.py:/app/app.py:ro
+    networks:
+      - caddy_proxy
+      - default
+
+networks:
+  caddy_proxy:
+    external: true
+  default:
+    name: iptv_default

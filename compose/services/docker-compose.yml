@@ -1,0 +1,445 @@
+# ==============================================================================
+# Master Home Server App Stack (Docker Compose)
+# Persistent Storage Location: /mnt/storage
+# Restart Policy: Always (24/7 Uptime across reboots & crashes)
+# TechHut 2025 Homelab Master Stack
+# ==============================================================================
+
+name: homeserver-apps
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. Glance (Ultra-Lightweight Homelab Startpage & Dashboard)
+  # ----------------------------------------------------------------------------
+  glance:
+    container_name: glance
+    image: glanceapp/glance:latest
+    volumes:
+      - /mnt/storage/AppData/glance/glance.yml:/app/config/glance.yml:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - '8088:8080'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 2. Jellyfin (Hardware-Accelerated Media Streaming)
+  # ----------------------------------------------------------------------------
+  jellyfin:
+    container_name: jellyfin
+    image: jellyfin/jellyfin:12
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/AppData/jellyfin/config:/config
+      - /mnt/storage/AppData/jellyfin/cache:/cache
+      - /mnt/storage/Media:/media
+    ports:
+      - '8096:8096'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 3. Jellyseerr (Media Discovery & 1-Click Requests for Jellyfin)
+  # ----------------------------------------------------------------------------
+  jellyseerr:
+    container_name: jellyseerr
+    image: fallenbagel/jellyseerr:latest
+    network_mode: host
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Asia/Kolkata
+      - PUID=1000
+      - PGID=1000
+      - PORT=5055
+    volumes:
+      - /mnt/storage/AppData/jellyseerr:/app/config
+      - /mnt/storage/AppData/jellyseerr/custom-entrypoint.sh:/custom-entrypoint.sh:ro
+      - /mnt/storage/Downloads:/downloads
+    entrypoint: ["/bin/sh", "/custom-entrypoint.sh"]
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 4. Prowlarr (Centralized Torrent Tracker & Usenet Indexer Proxy)
+  # ----------------------------------------------------------------------------
+  prowlarr:
+    container_name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/AppData/prowlarr:/config
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: '1.5'
+        reservations:
+          memory: 256M
+    ports:
+      - '9696:9696'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 4b. FlareSolverr (Cloudflare Challenge Solver for Prowlarr Indexers)
+  # ----------------------------------------------------------------------------
+  flaresolverr:
+    container_name: flaresolverr
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=Asia/Kolkata
+      - BROWSER_TIMEOUT=60000
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+    ports:
+      - '8191:8191'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+
+  # ----------------------------------------------------------------------------
+  # 5. Radarr (Automated Movie Collection & Quality Manager)
+  # ----------------------------------------------------------------------------
+  radarr:
+    container_name: radarr
+    image: lscr.io/linuxserver/radarr:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/AppData/radarr:/config
+      - /mnt/storage/Media/Movies:/movies
+      - /mnt/storage/Downloads:/downloads
+    ports:
+      - '7878:7878'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 6. Sonarr (Automated TV Series & Anime Manager)
+  # ----------------------------------------------------------------------------
+  sonarr:
+    container_name: sonarr
+    image: lscr.io/linuxserver/sonarr:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/AppData/sonarr:/config
+      - /mnt/storage/Media/TV:/tv
+      - /mnt/storage/Downloads:/downloads
+    ports:
+      - '8989:8989'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 7. Bazarr (Automated Subtitle Search & Downloader)
+  # ----------------------------------------------------------------------------
+  bazarr:
+    container_name: bazarr
+    image: lscr.io/linuxserver/bazarr:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/AppData/bazarr:/config
+      - /mnt/storage/Media/Movies:/movies
+      - /mnt/storage/Media/TV:/tv
+    ports:
+      - '6767:6767'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 8. Lidarr (Automated Music Discography & Album Manager)
+  # ----------------------------------------------------------------------------
+  lidarr:
+    container_name: lidarr
+    image: lscr.io/linuxserver/lidarr:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/AppData/lidarr:/config
+      - /mnt/storage/Media/Music:/music
+      - /mnt/storage/Downloads:/downloads
+    ports:
+      - '8686:8686'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 9. qBittorrent (24/7 Background Torrent Downloader)
+  # ----------------------------------------------------------------------------
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - WEBUI_PORT=8085
+      - TORRENTING_PORT=6881
+    volumes:
+      - /mnt/storage/AppData/qbittorrent/config:/config
+      - /mnt/storage/Downloads:/downloads
+    ports:
+      - '8085:8085'
+      - '6881:6881'
+      - '6881:6881/udp'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 10. Vaultwarden (Lightweight Private Password Manager)
+  # ----------------------------------------------------------------------------
+  vaultwarden:
+    container_name: vaultwarden
+    image: vaultwarden/server:latest
+    environment:
+      - SIGNUPS_ALLOWED=true
+      - WEBSOCKET_ENABLED=true
+    volumes:
+      - /mnt/storage/AppData/vaultwarden/data:/data
+    ports:
+      - '8083:80'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 11. FileBrowser (Web File Manager for /mnt/storage)
+  # ----------------------------------------------------------------------------
+  filebrowser:
+    container_name: filebrowser
+    image: filebrowser/filebrowser:latest
+    user: '1000:1000'
+    volumes:
+      - /mnt/storage:/srv
+      - /mnt/storage/AppData/filebrowser:/config
+    command: ["--address", "0.0.0.0", "--port", "80", "--database", "/config/filebrowser.db", "--root", "/srv"]
+    ports:
+      - '8082:80'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 12. Audiobookshelf (Audiobooks & Podcasts Manager)
+  # ----------------------------------------------------------------------------
+  audiobookshelf:
+    container_name: audiobookshelf
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    environment:
+      - AUDIOBOOKSHELF_UID=1000
+      - AUDIOBOOKSHELF_GID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/storage/Media/Audiobooks:/audiobooks
+      - /mnt/storage/Media/Podcasts:/podcasts
+      - /mnt/storage/AppData/audiobookshelf/config:/config
+      - /mnt/storage/AppData/audiobookshelf/metadata:/metadata
+    ports:
+      - '13378:80'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 13. Navidrome (Music Streaming Server)
+  # ----------------------------------------------------------------------------
+  navidrome:
+    container_name: navidrome
+    image: deluan/navidrome:latest
+    user: '1000:1000'
+    environment:
+      - ND_SCANSCHEDULE=1h
+      - ND_LOGLEVEL=info
+      - ND_SESSIONTIMEOUT=24h
+    volumes:
+      - /mnt/storage/AppData/navidrome/data:/data
+      - /mnt/storage/Media/Music:/music:ro
+    ports:
+      - '4533:4533'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 14. Home Assistant (Smart Home Hub & Automation)
+  # ----------------------------------------------------------------------------
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      - /mnt/storage/AppData/homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    environment:
+      - TZ=Asia/Kolkata
+    ports:
+      - '8123:8123'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 15. Prometheus (Infrastructure Time-Series Metrics)
+  # ----------------------------------------------------------------------------
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - /mnt/storage/AppData/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /mnt/storage/AppData/prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - '9090:9090'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 16. Node Exporter (Hardware Metrics Exporter)
+  # ----------------------------------------------------------------------------
+  node-exporter:
+    container_name: node_exporter
+    image: prom/node-exporter:latest
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - '9100:9100'
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 17. Grafana (Homelab Metrics & Visualization)
+  # ----------------------------------------------------------------------------
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - /mnt/storage/AppData/grafana:/var/lib/grafana
+    ports:
+      - '3005:3000'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 18. Uptime Kuma (Server & Services Uptime Monitor)
+  # ----------------------------------------------------------------------------
+  uptime-kuma:
+    container_name: uptime_kuma
+    image: louislam/uptime-kuma:1
+    volumes:
+      - /mnt/storage/AppData/uptime-kuma/data:/app/data
+    ports:
+      - '3001:3001'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 19. AdGuard Home (Network-Wide DNS Ad-Blocker)
+  # ----------------------------------------------------------------------------
+  adguardhome:
+    container_name: adguardhome
+    image: adguard/adguardhome:latest
+    volumes:
+      - /mnt/storage/AppData/adguardhome/work:/opt/adguardhome/work
+      - /mnt/storage/AppData/adguardhome/conf:/opt/adguardhome/conf
+    ports:
+      - '3000:3000/tcp'
+      - '8053:80/tcp'
+      - '53:53/tcp'
+      - '53:53/udp'
+    networks:
+      - default
+      - caddy_proxy
+    restart: always
+
+  # ----------------------------------------------------------------------------
+  # 20. Watchtower (Automated Docker Image Updater)
+  # ----------------------------------------------------------------------------
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - DOCKER_API_VERSION=1.45
+      - WATCHTOWER_SCHEDULE=0 0 4 * * *
+    restart: always
+
+networks:
+  default:
+  caddy_proxy:
+    external: true

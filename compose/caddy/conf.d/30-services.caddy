@@ -1,0 +1,113 @@
+# ==============================================================================
+# 30-services.caddy: Productivity, Storage & Utilities
+# Administrative Only - Restricted to group:admins and Local LAN
+# ==============================================================================
+
+# Vaultwarden (Bitwarden Password Vault - Strict HTTPS Only)
+https://vaultwarden.{$TAILSCALE_DOMAIN:homeserver.ts.net}, https://vaultwarden.home.arpa, https://vaultwarden.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy vaultwarden:80
+}
+
+# FileBrowser (Storage Manager)
+filebrowser.{$TAILSCALE_DOMAIN:homeserver.ts.net}, filebrowser.home.arpa, filebrowser.homeserver, files.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    request_body {
+        max_size 50GB
+    }
+
+    reverse_proxy filebrowser:80
+}
+
+# qBittorrent (Web UI)
+qbittorrent.{$TAILSCALE_DOMAIN:homeserver.ts.net}, qbittorrent.home.arpa, qbittorrent.homeserver, torrent.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy qbittorrent:8085 {
+        header_up Host {upstream_hostport}
+    }
+}
+
+# Audiobookshelf (Audiobooks & Podcasts)
+audiobookshelf.{$TAILSCALE_DOMAIN:homeserver.ts.net}, audiobookshelf.home.arpa, audiobookshelf.homeserver, audio.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy audiobookshelf:80
+}
+
+# Navidrome (Music Streaming)
+navidrome.{$TAILSCALE_DOMAIN:homeserver.ts.net}, navidrome.home.arpa, navidrome.homeserver, music.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy navidrome:4533
+}
+
+# Docmost (Knowledge Base & Wiki)
+docmost.{$TAILSCALE_DOMAIN:homeserver.ts.net}, docmost.home.arpa, docmost.homeserver, wiki.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy docmost:3000
+}
+
+# Hoarder (AI Bookmarking App)
+hoarder.{$TAILSCALE_DOMAIN:homeserver.ts.net}, hoarder.home.arpa, hoarder.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy hoarder_web:3000
+}
+
+# SearXNG (Private Metasearch Engine)
+search.{$TAILSCALE_DOMAIN:homeserver.ts.net}, search.home.arpa, search.homeserver, searxng.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy searxng:8080
+}
+
+# Ollama (Local LLM Inference API)
+ollama.{$TAILSCALE_DOMAIN:homeserver.ts.net}, ollama.home.arpa, ollama.homeserver, ai.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy ollama:11434
+}
+
+# CUPS Print Server (Administration Interface)
+cups.{$TAILSCALE_DOMAIN:homeserver.ts.net}, cups.home.arpa, cups.homeserver, print.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy host.docker.internal:631
+}
+
+# CUPS WebPrint Dropzone
+webprint.{$TAILSCALE_DOMAIN:homeserver.ts.net}, webprint.home.arpa, webprint.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    request_body {
+        max_size 100MB
+    }
+
+    reverse_proxy host.docker.internal:8084
+}

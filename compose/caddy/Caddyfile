@@ -1,0 +1,41 @@
+# ==============================================================================
+# Caddy Master Reverse Proxy Configuration
+# Single Source of Truth for Homeserver Gateways
+# ==============================================================================
+
+{
+    # Global options
+    auto_https disable_redirects
+    http_port 80
+    https_port 443
+}
+
+# ------------------------------------------------------------------------------
+# Reusable Snippets
+# ------------------------------------------------------------------------------
+
+# Common Security & Proxy Headers
+(common_headers) {
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains;"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+    }
+}
+
+# Admin-Only Access Restriction (LAN + Authorized Admin Tailscale Devices)
+# Denies Tailscale restricted users (e.g. group:media-users)
+(admin_only) {
+    @unauthorized not remote_ip 192.168.0.0/16 10.0.0.0/8 172.16.0.0/12 100.64.0.0/10 127.0.0.1 ::1
+    respond @unauthorized "403 Forbidden: Administrative Access Only" 403
+}
+
+# Standard TLS configuration using Homeserver Private Wildcard CA
+(tls_internal) {
+    tls /etc/caddy/certs/wildcard.crt /etc/caddy/certs/wildcard.key
+}
+
+# Import all modular service definitions
+import /etc/caddy/conf.d/*.caddy

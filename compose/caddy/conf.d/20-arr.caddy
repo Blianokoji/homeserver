@@ -1,0 +1,49 @@
+# ==============================================================================
+# 20-arr.caddy: Media Automation Suite (*arr Suite)
+# Administrative Only - Restricted to group:admins and Local LAN
+# ==============================================================================
+
+# Radarr (Movies)
+radarr.{$TAILSCALE_DOMAIN:homeserver.ts.net}, radarr.home.arpa, radarr.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy radarr:7878
+}
+
+# Sonarr (TV Shows)
+sonarr.{$TAILSCALE_DOMAIN:homeserver.ts.net}, sonarr.home.arpa, sonarr.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy sonarr:8989
+}
+
+# Prowlarr (Indexer Manager)
+prowlarr.{$TAILSCALE_DOMAIN:homeserver.ts.net}, prowlarr.home.arpa, prowlarr.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy prowlarr:9696
+}
+
+# Bazarr (Subtitles)
+bazarr.{$TAILSCALE_DOMAIN:homeserver.ts.net}, bazarr.home.arpa, bazarr.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy bazarr:6767
+}
+
+# Lidarr (Music)
+lidarr.{$TAILSCALE_DOMAIN:homeserver.ts.net}, lidarr.home.arpa, lidarr.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy lidarr:8686
+}

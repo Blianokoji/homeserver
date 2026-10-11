@@ -1,0 +1,744 @@
+{
+  "server_metadata": {
+    "hostname": "homeserver",
+    "lan_ip": null,
+    "tailscale_ip": null,
+    "tailscale_fqdn": null,
+    "storage_root": "/mnt/storage"
+  },
+  "selfhosted_services": [
+    {
+      "id": "caddy",
+      "name": "Caddy Reverse Proxy",
+      "icon": "\ud83c\udf10",
+      "category": "Reverse Proxy & Gateway",
+      "ports": [
+        80,
+        443
+      ],
+      "web_port": 443,
+      "protocol": "https",
+      "container_names": [
+        "caddy"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/caddy",
+      "config_path": "/mnt/storage/AppData/caddy/Caddyfile",
+      "description": "Enterprise-grade reverse proxy, automatic internal TLS, and Tailscale application gateway",
+      "default_creds": "Identity-based Access Control via Tailscale & LAN"
+    },
+    {
+      "id": "glance",
+      "name": "Glance",
+      "icon": "\ud83d\udcca",
+      "category": "Startpage & Hub",
+      "ports": [
+        8088
+      ],
+      "web_port": 8088,
+      "protocol": "http",
+      "container_names": [
+        "glance"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/glance/glance.yml",
+      "description": "Unified homelab dashboard with real-time hardware telemetry, weather, RSS feeds, and bookmarks",
+      "default_creds": "Configured via glance.yml"
+    },
+    {
+      "id": "immich",
+      "name": "Immich",
+      "icon": "\ud83d\udcf8",
+      "category": "Photos & Videos",
+      "ports": [
+        2283
+      ],
+      "web_port": 2283,
+      "protocol": "http",
+      "container_names": [
+        "immich_server",
+        "immich_postgres",
+        "immich_machine_learning",
+        "immich_redis"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/immich",
+      "config_path": "/mnt/storage/AppData/immich/.env",
+      "description": "Self-hosted Google Photos alternative with AI facial recognition, object detection, and multi-user isolation",
+      "default_creds": "Initial onboarding wizard"
+    },
+    {
+      "id": "jellyfin",
+      "name": "Jellyfin",
+      "icon": "\ud83c\udfac",
+      "category": "Media Streaming",
+      "ports": [
+        8096
+      ],
+      "web_port": 8096,
+      "protocol": "http",
+      "container_names": [
+        "jellyfin"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/jellyfin/config",
+      "description": "Hardware-accelerated (NVENC GTX 1050 Ti) 4K/1080p media streaming server for movies, TV, and music",
+      "default_creds": "Initial setup wizard"
+    },
+    {
+      "id": "jellyseerr",
+      "name": "Jellyseerr",
+      "icon": "\ud83c\udfaf",
+      "category": "Media Requests",
+      "ports": [
+        5055
+      ],
+      "web_port": 5055,
+      "protocol": "http",
+      "container_names": [
+        "jellyseerr"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/jellyseerr",
+      "description": "Media discovery and 1-click request portal integrating with Jellyfin, Radarr, and Sonarr",
+      "default_creds": "Sign in with Jellyfin account"
+    },
+    {
+      "id": "prowlarr",
+      "name": "Prowlarr",
+      "icon": "\ud83c\udf10",
+      "category": "Indexer Proxy",
+      "ports": [
+        9696
+      ],
+      "web_port": 9696,
+      "protocol": "http",
+      "container_names": [
+        "prowlarr"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/prowlarr",
+      "description": "Central indexer & torrent tracker management proxy synchronizing with Radarr, Sonarr, and Lidarr",
+      "default_creds": "Setup authentication in Settings"
+    },
+    {
+      "id": "flaresolverr",
+      "name": "FlareSolverr",
+      "icon": "\ud83d\udee1\ufe0f",
+      "category": "Cloudflare Proxy",
+      "ports": [
+        8191
+      ],
+      "web_port": 8191,
+      "protocol": "http",
+      "container_names": [
+        "flaresolverr"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/services/docker-compose.yml",
+      "description": "Proxy server to bypass Cloudflare and DDoS-Guard protection for Prowlarr indexers",
+      "default_creds": "REST API on port 8191"
+    },
+    {
+      "id": "radarr",
+      "name": "Radarr",
+      "icon": "\ud83c\udfac",
+      "category": "Movie Automation",
+      "ports": [
+        7878
+      ],
+      "web_port": 7878,
+      "protocol": "http",
+      "container_names": [
+        "radarr"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/radarr",
+      "description": "Automated movie grabber, quality upgrader, and organizer feeding qBittorrent and Jellyfin",
+      "default_creds": "Setup authentication in Settings"
+    },
+    {
+      "id": "sonarr",
+      "name": "Sonarr",
+      "icon": "\ud83d\udcfa",
+      "category": "TV Automation",
+      "ports": [
+        8989
+      ],
+      "web_port": 8989,
+      "protocol": "http",
+      "container_names": [
+        "sonarr"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/sonarr",
+      "description": "Automated TV show and anime release tracking, downloading via qBittorrent, and organizing",
+      "default_creds": "Setup authentication in Settings"
+    },
+    {
+      "id": "bazarr",
+      "name": "Bazarr",
+      "icon": "\ud83d\udcac",
+      "category": "Subtitles",
+      "ports": [
+        6767
+      ],
+      "web_port": 6767,
+      "protocol": "http",
+      "container_names": [
+        "bazarr"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/bazarr",
+      "description": "Automated multi-provider subtitle downloader companion for Radarr and Sonarr",
+      "default_creds": "Setup authentication in Settings"
+    },
+    {
+      "id": "lidarr",
+      "name": "Lidarr",
+      "icon": "\ud83c\udfb5",
+      "category": "Music Automation",
+      "ports": [
+        8686
+      ],
+      "web_port": 8686,
+      "protocol": "http",
+      "container_names": [
+        "lidarr"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/lidarr",
+      "description": "Automated music discography tracker, metadata tagger, and grabber feeding Navidrome",
+      "default_creds": "Setup authentication in Settings"
+    },
+    {
+      "id": "qbittorrent",
+      "name": "qBittorrent",
+      "icon": "\ud83d\udce5",
+      "category": "24/7 Downloads",
+      "ports": [
+        8085,
+        6881
+      ],
+      "web_port": 8085,
+      "protocol": "http",
+      "container_names": [
+        "qbittorrent"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/qbittorrent/config",
+      "description": "Headless 24/7 BitTorrent download client with Web UI (8085) and peer communication port (6881)",
+      "default_creds": "Configured during initial setup wizard"
+    },
+    {
+      "id": "docmost",
+      "name": "Docmost",
+      "icon": "\ud83d\udcda",
+      "category": "Knowledge Base",
+      "ports": [
+        3002
+      ],
+      "web_port": 3002,
+      "protocol": "http",
+      "container_names": [
+        "docmost",
+        "docmost_db",
+        "docmost_redis"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/docmost",
+      "config_path": "/mnt/storage/AppData/docmost/docker-compose.yml",
+      "description": "Modern Notion alternative for collaborative documentation, personal wikis, and structured notes",
+      "default_creds": "Create admin account on first visit"
+    },
+    {
+      "id": "hoarder",
+      "name": "Hoarder",
+      "icon": "\ud83d\udd16",
+      "category": "AI Bookmark App",
+      "ports": [
+        3030
+      ],
+      "web_port": 3030,
+      "protocol": "http",
+      "container_names": [
+        "hoarder_web",
+        "hoarder_meilisearch",
+        "hoarder_redis",
+        "hoarder_chrome"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/hoarder",
+      "config_path": "/mnt/storage/AppData/hoarder/docker-compose.yml",
+      "description": "AI-powered bookmarking and web clipper with automatic text extraction, screenshots, and tagging",
+      "default_creds": "Create admin account on first visit"
+    },
+    {
+      "id": "homeassistant",
+      "name": "Home Assistant",
+      "icon": "\ud83c\udfe1",
+      "category": "Smart Home Hub",
+      "ports": [
+        8123
+      ],
+      "web_port": 8123,
+      "protocol": "http",
+      "container_names": [
+        "homeassistant"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/homeassistant",
+      "description": "Central smart home automation platform integrating local smart devices, presence, and automations",
+      "default_creds": "Initial onboarding wizard"
+    },
+    {
+      "id": "vaultwarden",
+      "name": "Vaultwarden",
+      "icon": "\ud83d\udd10",
+      "category": "Password Vault",
+      "ports": [
+        8083
+      ],
+      "web_port": 8083,
+      "protocol": "http",
+      "container_names": [
+        "vaultwarden"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/vaultwarden/data",
+      "description": "Lightweight, secure Bitwarden-compatible private password manager backend and web vault",
+      "default_creds": "Create master account on first visit"
+    },
+    {
+      "id": "filebrowser",
+      "name": "FileBrowser",
+      "icon": "\ud83d\udcc1",
+      "category": "Storage Manager",
+      "ports": [
+        8082
+      ],
+      "web_port": 8082,
+      "protocol": "http",
+      "container_names": [
+        "filebrowser"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/filebrowser",
+      "description": "Web-based file manager providing browser access, upload, and download for /mnt/storage",
+      "default_creds": "Configured during initial setup wizard"
+    },
+    {
+      "id": "audiobookshelf",
+      "name": "Audiobookshelf",
+      "icon": "\ud83c\udfa7",
+      "category": "Audiobooks/Podcasts",
+      "ports": [
+        13378
+      ],
+      "web_port": 13378,
+      "protocol": "http",
+      "container_names": [
+        "audiobookshelf"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/audiobookshelf",
+      "description": "Self-hosted audiobook and podcast streaming server with progress syncing and mobile apps",
+      "default_creds": "Create root account on first visit"
+    },
+    {
+      "id": "navidrome",
+      "name": "Navidrome",
+      "icon": "\ud83c\udfb5",
+      "category": "Music Server",
+      "ports": [
+        4533
+      ],
+      "web_port": 4533,
+      "protocol": "http",
+      "container_names": [
+        "navidrome"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/navidrome/data",
+      "description": "Subsonic-compatible modern, lightweight streaming server for high-resolution music libraries",
+      "default_creds": "Create admin account on first visit"
+    },
+    {
+      "id": "uptime_kuma",
+      "name": "Uptime Kuma",
+      "icon": "\ud83d\udcca",
+      "category": "Service Monitor",
+      "ports": [
+        3001
+      ],
+      "web_port": 3001,
+      "protocol": "http",
+      "container_names": [
+        "uptime_kuma"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/uptime-kuma/data",
+      "description": "Real-time service uptime, HTTP/ping health monitoring, and alerting dashboard",
+      "default_creds": "Create admin account on first visit"
+    },
+    {
+      "id": "adguardhome",
+      "name": "AdGuard Home",
+      "icon": "\ud83d\udee1\ufe0f",
+      "category": "DNS Ad-Blocker",
+      "ports": [
+        8053,
+        53,
+        3000
+      ],
+      "web_port": 8053,
+      "protocol": "http",
+      "container_names": [
+        "adguardhome"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/adguardhome/conf",
+      "description": "Network-wide DNS server with ad-blocking, privacy protection, and encrypted DNS support",
+      "default_creds": "Setup on port 3000 / Web on 8053"
+    },
+    {
+      "id": "grafana",
+      "name": "Grafana",
+      "icon": "\ud83d\udcc8",
+      "category": "Metrics Dashboard",
+      "ports": [
+        3005
+      ],
+      "web_port": 3005,
+      "protocol": "http",
+      "container_names": [
+        "grafana"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/grafana",
+      "description": "Feature-rich analytics and visual dashboard suite connecting to Prometheus telemetry",
+      "default_creds": "admin / admin"
+    },
+    {
+      "id": "prometheus",
+      "name": "Prometheus",
+      "icon": "\ud83d\udcca",
+      "category": "Telemetry Engine",
+      "ports": [
+        9090
+      ],
+      "web_port": 9090,
+      "protocol": "http",
+      "container_names": [
+        "prometheus"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/prometheus/prometheus.yml",
+      "description": "Time-series telemetry database and monitoring collector scraping Node Exporter and Docker",
+      "default_creds": "Open Metrics Console"
+    },
+    {
+      "id": "node_exporter",
+      "name": "Node Exporter",
+      "icon": "\u2699\ufe0f",
+      "category": "Hardware Metrics",
+      "ports": [
+        9100
+      ],
+      "web_port": 9100,
+      "protocol": "http",
+      "container_names": [
+        "node_exporter"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/services/docker-compose.yml",
+      "description": "Host hardware and OS kernel metrics exporter providing data stream to Prometheus",
+      "default_creds": "Raw Metrics Stream (/metrics)"
+    },
+    {
+      "id": "casaos",
+      "name": "CasaOS",
+      "icon": "\ud83c\udfe0",
+      "category": "Web Dashboard",
+      "ports": [
+        80
+      ],
+      "web_port": 80,
+      "protocol": "http",
+      "container_names": [],
+      "service_type": "systemd_service",
+      "systemd_unit": "casaos.service",
+      "compose_dir": null,
+      "config_path": "/etc/casaos",
+      "description": "Simple homelab web dashboard, app store, and disk manager running as host service",
+      "default_creds": "Initial setup on first visit"
+    },
+    {
+      "id": "portainer",
+      "name": "Portainer CE",
+      "icon": "\ud83d\udc33",
+      "category": "Docker Web UI",
+      "ports": [
+        9443
+      ],
+      "web_port": 9443,
+      "protocol": "https",
+      "container_names": [
+        "portainer"
+      ],
+      "service_type": "docker_standalone",
+      "compose_dir": null,
+      "config_path": "/mnt/storage/AppData/portainer",
+      "description": "Centralized web management UI for Docker containers, images, volumes, and networks",
+      "default_creds": "Create admin account on first visit"
+    },
+    {
+      "id": "sunshine",
+      "name": "Sunshine",
+      "icon": "\ud83d\udda5\ufe0f",
+      "category": "Remote Desktop",
+      "ports": [
+        47990,
+        47984,
+        47989,
+        47998,
+        47999,
+        48000,
+        48010
+      ],
+      "web_port": 47990,
+      "protocol": "https",
+      "container_names": [],
+      "service_type": "systemd_user_service",
+      "systemd_unit": "sunshine.service",
+      "compose_dir": null,
+      "config_path": "~/.config/sunshine/sunshine.conf",
+      "description": "Self-hosted low-latency NVIDIA NVENC game and desktop streaming server for Moonlight clients",
+      "default_creds": "Create credentials on first visit"
+    },
+    {
+      "id": "watchtower",
+      "name": "Watchtower",
+      "icon": "\ud83d\udd04",
+      "category": "Image Auto-Updater",
+      "ports": [],
+      "web_port": null,
+      "protocol": null,
+      "container_names": [
+        "watchtower"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/services",
+      "config_path": "/mnt/storage/AppData/services/docker-compose.yml",
+      "description": "Automated container updater running daily at 4:00 AM to pull latest image builds",
+      "default_creds": "Automated background process"
+    },
+    {
+      "id": "cups",
+      "name": "CUPS Print Server & AirPrint",
+      "icon": "\ud83d\udda8\ufe0f",
+      "category": "Print Server & Mobile Printing",
+      "ports": [
+        631,
+        8084
+      ],
+      "web_port": 631,
+      "protocol": "http",
+      "container_names": [
+        "cups"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/cups",
+      "config_path": "/mnt/storage/AppData/cups/config",
+      "description": "CUPS print server with Apple AirPrint, Android Mopria/IPP, Epson ESC/P-R drivers, and Cloud WebPrint portal (8084)",
+      "default_creds": "Configured via CUPS_PASSWORD environment variable"
+    },
+    {
+      "id": "searxng",
+      "name": "SearXNG",
+      "icon": "\ud83d\udd0e",
+      "category": "Private Metasearch Engine",
+      "ports": [
+        8080
+      ],
+      "web_port": 8080,
+      "protocol": "http",
+      "container_names": [
+        "searxng"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/searxng",
+      "config_path": "/mnt/storage/AppData/searxng/settings.yml",
+      "description": "Privacy-respecting, sovereign metasearch engine aggregating search queries for AI agents and users",
+      "default_creds": "No authentication required"
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama",
+      "icon": "\ud83e\udd99",
+      "category": "Local AI & LLM Inference",
+      "ports": [
+        11434
+      ],
+      "web_port": 11434,
+      "protocol": "http",
+      "container_names": [
+        "ollama"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/ollama",
+      "config_path": "/mnt/storage/AppData/ollama",
+      "description": "Local LLM inference engine with NVIDIA GTX 1050 Ti GPU acceleration for AI research and agents",
+      "default_creds": "HTTP REST API (Port 11434)"
+    },
+    {
+      "id": "iptv-proxy",
+      "name": "IPTV Live TV Gateway",
+      "icon": "\ud83d\udcfa",
+      "category": "Live TV & Streaming",
+      "ports": [
+        8484
+      ],
+      "web_port": 8484,
+      "protocol": "http",
+      "container_names": [
+        "iptv-proxy"
+      ],
+      "service_type": "docker_compose",
+      "compose_dir": "/mnt/storage/AppData/iptv-proxy",
+      "config_path": "/mnt/storage/AppData/iptv-proxy/app.py",
+      "description": "Ultra-lightweight IPTV proxy, playlist optimizer, and Live TV gateway for Jellyfin with channel logos",
+      "default_creds": "Public Web Dashboard & Tuner Endpoint"
+    },
+    {
+      "id": "copypop",
+      "name": "CopyPop",
+      "icon": "📋",
+      "category": "File Sharing & Clipboard",
+      "ports": [
+        18080
+      ],
+      "web_port": 18080,
+      "protocol": "http",
+      "container_names": [],
+      "service_type": "systemd_user_service",
+      "systemd_unit": "copypop.service",
+      "compose_dir": null,
+      "config_path": "~/.config/copypop/.env",
+      "description": "Cross-device file & image sharing and clipboard syncing service saving directly to Obsidian Inbox",
+      "default_creds": "Configured via environment variable"
+    }
+  ],
+  "known_system_ports": {
+    "22": {
+      "name": "OpenSSH Daemon",
+      "category": "Remote Shell / SSH",
+      "type": "System Daemon (sshd.service)",
+      "description": "Secure remote shell access and SFTP / SCP file transfer"
+    },
+    "53": {
+      "name": "AdGuard Home DNS Server",
+      "category": "DNS Resolution",
+      "type": "Docker Container (adguardhome)",
+      "description": "Standard DNS resolver listening on TCP/UDP for local and network queries"
+    },
+    "546": {
+      "name": "DHCPv6 Client",
+      "category": "Network Management",
+      "type": "System Daemon (systemd-networkd / NetworkManager)",
+      "description": "Dynamic Host Configuration Protocol client for IPv6 address assignment"
+    },
+    "631": {
+      "name": "CUPS IPP Print Server",
+      "category": "Network Printing",
+      "type": "Docker Container (cups)",
+      "description": "Internet Printing Protocol (IPP) and CUPS web administration interface"
+    },
+    "8084": {
+      "name": "Cloud WebPrint Dropzone",
+      "category": "Mobile & Web Printing",
+      "type": "Docker Container (cups)",
+      "description": "Mobile-optimized web portal for zero-configuration printing from any browser"
+    },
+    "5353": {
+      "name": "mDNS (Multicast DNS)",
+      "category": "Local Network Discovery",
+      "type": "System Daemon (avahi / systemd-resolved)",
+      "description": "Zero-configuration hostname resolution (.local domain resolution across LAN)"
+    },
+    "5432": {
+      "name": "PostgreSQL Database",
+      "category": "Internal Database",
+      "type": "Docker Container (immich_postgres / docmost_db)",
+      "description": "Relational database backend used internally by Immich and Docmost"
+    },
+    "6379": {
+      "name": "Redis / Valkey Cache",
+      "category": "In-Memory Cache",
+      "type": "Docker Container (immich_redis / hoarder_redis / docmost_redis)",
+      "description": "In-memory data store and caching queue for background workers"
+    },
+    "7700": {
+      "name": "Meilisearch Engine",
+      "category": "Search Index",
+      "type": "Docker Container (hoarder_meilisearch)",
+      "description": "Fast full-text search engine backend for Hoarder bookmark search"
+    },
+    "34023": {
+      "name": "Containerd Runtime Socket",
+      "category": "Container Engine",
+      "type": "System Daemon (containerd.service)",
+      "description": "Internal communication socket for container runtime management"
+    },
+    "41641": {
+      "name": "Tailscale WireGuard UDP",
+      "category": "Mesh VPN Direct Link",
+      "type": "System Daemon (tailscaled.service)",
+      "description": "WireGuard encrypted UDP direct peer-to-peer connection port"
+    },
+    "53906": {
+      "name": "Tailscale Mesh Interface",
+      "category": "Mesh VPN Internal",
+      "type": "System Daemon (tailscaled.service)",
+      "description": "Tailscale daemon listening on IPv6 mesh interface"
+    },
+    "61432": {
+      "name": "Tailscale Mesh Interface",
+      "category": "Mesh VPN Internal",
+      "type": "System Daemon (tailscaled.service)",
+      "description": "Tailscale daemon listening on IPv4 mesh interface"
+    },
+    "8080": {
+      "name": "SearXNG Metasearch Engine",
+      "category": "Search Index & API",
+      "type": "Docker Container (searxng)",
+      "description": "Privacy-first sovereign metasearch engine and REST API"
+    },
+    "11434": {
+      "name": "Ollama LLM Server",
+      "category": "AI & LLM Inference",
+      "type": "Docker Container (ollama)",
+      "description": "Local AI inference server providing REST API for models like Llama 3.2"
+    }
+  }
+}

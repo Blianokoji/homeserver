@@ -1,0 +1,30 @@
+# ==============================================================================
+# Caddy Reverse Proxy & Application Gateway
+# Persistent Storage Location: /mnt/storage/AppData/caddy
+# Architecture: Tailscale -> Caddy -> Docker Bridge (caddy_proxy) -> Applications
+# ==============================================================================
+
+name: caddy-proxy
+
+services:
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - /mnt/storage/AppData/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /mnt/storage/AppData/caddy/conf.d:/etc/caddy/conf.d:ro
+      - /mnt/storage/AppData/caddy/certs:/etc/caddy/certs:ro
+      - /mnt/storage/AppData/caddy/data:/data
+      - /mnt/storage/AppData/caddy/config:/config
+    networks:
+      - caddy_proxy
+
+networks:
+  caddy_proxy:
+    external: true

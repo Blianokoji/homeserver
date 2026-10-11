@@ -1,0 +1,51 @@
+# ==============================================================================
+# Docmost Docker Compose Stack
+# Collaborative Wiki and Knowledge Base (Notion Alternative)
+# Persistent Storage Location: /mnt/storage/AppData/docmost
+# ==============================================================================
+
+name: docmost-stack
+
+services:
+  docmost:
+    container_name: docmost
+    image: docmost/docmost:latest
+    depends_on:
+      - docmost-db
+      - docmost-redis
+    environment:
+      - APP_URL=${DOCMOST_APP_URL:-http://localhost:3002}
+      - APP_SECRET=${DOCMOST_APP_SECRET:-replace_with_a_secure_random_secret_32_bytes}
+      - DATABASE_URL=postgresql://${DOCMOST_DB_USER:-docmost}:${DOCMOST_DB_PASSWORD:-docmost_secure_pass}@docmost-db:5432/docmost?sslmode=disable
+      - REDIS_URL=redis://docmost-redis:6379
+    volumes:
+      - /mnt/storage/AppData/docmost/data:/app/data/storage
+    ports:
+      - '3002:3000'
+    restart: always
+    networks:
+      - default
+      - caddy_proxy
+
+  docmost-db:
+    container_name: docmost_db
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=${DOCMOST_DB_USER:-docmost}
+      - POSTGRES_PASSWORD=${DOCMOST_DB_PASSWORD:-docmost_secure_pass}
+      - POSTGRES_DB=docmost
+    volumes:
+      - /mnt/storage/AppData/docmost/db:/var/lib/postgresql/data
+    restart: always
+
+  docmost-redis:
+    container_name: docmost_redis
+    image: redis:7-alpine
+    volumes:
+      - /mnt/storage/AppData/docmost/redis:/data
+    restart: always
+
+networks:
+  default:
+  caddy_proxy:
+    external: true

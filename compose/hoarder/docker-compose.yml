@@ -1,0 +1,66 @@
+# ==============================================================================
+# Hoarder Docker Compose Stack
+# AI-Powered Link, Bookmark, and Content Hoarder
+# Persistent Storage Location: /mnt/storage/AppData/hoarder
+# ==============================================================================
+
+name: hoarder-stack
+
+services:
+  hoarder-web:
+    container_name: hoarder_web
+    image: ghcr.io/hoarder-app/hoarder:release
+    restart: always
+    ports:
+      - '3030:3000'
+    volumes:
+      - /mnt/storage/AppData/hoarder/data:/data
+    environment:
+      - MEILI_ADDR=http://hoarder-meilisearch:7700
+      - MEILI_MASTER_KEY=${HOARDER_MEILI_KEY:-replace_with_meili_master_key}
+      - NEXTAUTH_SECRET=${HOARDER_NEXTAUTH_SECRET:-replace_with_nextauth_secret}
+      - NEXTAUTH_URL=${HOARDER_NEXTAUTH_URL:-http://localhost:3030}
+      - REDIS_ADDR=hoarder-redis:6379
+      - BROWSER_WEB_URL=http://hoarder-chrome:9222
+      - DATA_DIR=/data
+      - DISABLE_SIGNUPS=false
+    depends_on:
+      - hoarder-meilisearch
+      - hoarder-redis
+      - hoarder-chrome
+    networks:
+      - default
+      - caddy_proxy
+
+  hoarder-chrome:
+    container_name: hoarder_chrome
+    image: zenika/alpine-chrome:latest
+    restart: always
+    command:
+      - --no-sandbox
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --remote-debugging-address=0.0.0.0
+      - --remote-debugging-port=9222
+
+  hoarder-meilisearch:
+    container_name: hoarder_meilisearch
+    image: getmeili/meilisearch:latest
+    restart: always
+    environment:
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_MASTER_KEY=${HOARDER_MEILI_KEY:-replace_with_meili_master_key}
+    volumes:
+      - /mnt/storage/AppData/hoarder/meilisearch:/meili_data
+
+  hoarder-redis:
+    container_name: hoarder_redis
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - /mnt/storage/AppData/hoarder/redis:/data
+
+networks:
+  default:
+  caddy_proxy:
+    external: true

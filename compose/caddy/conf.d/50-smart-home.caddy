@@ -1,0 +1,13 @@
+# ==============================================================================
+# 50-smart-home.caddy: Home Automation Gateway
+# Administrative Only - Restricted to group:admins and Local LAN
+# ==============================================================================
+
+# Home Assistant
+homeassistant.{$TAILSCALE_DOMAIN:homeserver.ts.net}, homeassistant.home.arpa, homeassistant.homeserver, hass.{$TAILSCALE_DOMAIN:homeserver.ts.net} {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy homeassistant:8123
+}

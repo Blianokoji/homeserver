@@ -1,0 +1,17 @@
+# ==============================================================================
+# 00-dashboard.caddy: Root Gateway & Glance Dashboard
+# ==============================================================================
+
+http://{$LAN_IP:localhost}, http://{$TAILSCALE_IP:127.0.0.1} {
+    import common_headers
+    import admin_only
+    reverse_proxy glance:8080
+}
+
+{$TAILSCALE_DOMAIN:homeserver.ts.net}, glance.{$TAILSCALE_DOMAIN:homeserver.ts.net}, glance.home.arpa, glance.homeserver {
+    import common_headers
+    import admin_only
+    import tls_internal
+
+    reverse_proxy glance:8080
+}

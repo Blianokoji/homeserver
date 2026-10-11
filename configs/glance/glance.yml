@@ -1,0 +1,202 @@
+# ==============================================================================
+# Glance Dashboard Configuration - Homeserver
+# TechHut 2025 Homelab Hub
+# ==============================================================================
+
+theme:
+  background-color: 240 20% 10%
+  contrast-multiplier: 1.1
+  primary-color: 215 90% 60%
+
+branding:
+  custom-title: "Homeserver | TechHut 2025"
+  hide-footer: true
+  favicon-url: "https://raw.githubusercontent.com/glanceapp/glance/main/assets/icon.svg"
+
+pages:
+  - name: Home
+    columns:
+      # Left Column: Search, System Stats & Hardware Monitoring, Weather
+      - size: small
+        widgets:
+          - type: clock
+            hour-format: 12h
+            timezones:
+              - timezone: Asia/Kolkata
+                label: Local Time
+
+          - type: search
+            autofocus: true
+            search-engine: duckduckgo
+            placeholder: Search web or homelab...
+
+          - type: weather
+            location: Kochi, India
+            unit: metric
+            show-forecast: true
+
+          - type: server-stats
+            show-hardware: true
+            show-cpu: true
+            show-memory: true
+            show-storage: true
+            mountpoints:
+              - /
+              - /mnt/storage
+
+      # Center Column: Master Services & Media Super-Stack
+      - size: full
+        widgets:
+          - type: bookmarks
+            title: "🎬 Media Streaming & Cloud"
+            color: 270 70% 60%
+            bookmarks:
+              - title: Jellyfin
+                url: http://<lan-ip>:8096
+                same-tab: true
+                icon: si:jellyfin
+                description: Hardware-Accelerated NVENC Video Streaming
+              - title: Immich
+                url: http://<lan-ip>:2283
+                same-tab: true
+                icon: si:googlephotos
+                description: Multi-User Isolated Photo & Video Cloud
+              - title: Navidrome
+                url: http://<lan-ip>:4533
+                same-tab: true
+                icon: si:spotify
+                description: High-Performance Music Server
+              - title: Audiobookshelf
+                url: http://<lan-ip>:13378
+                same-tab: true
+                icon: si:audible
+                description: Audiobooks & Podcasts Manager
+
+          - type: bookmarks
+            title: "⚡ Media Automation (*arr Suite)"
+            color: 210 90% 55%
+            bookmarks:
+              - title: Jellyseerr
+                url: http://<lan-ip>:5055
+                same-tab: true
+                icon: si:overseerr
+                description: Movie & TV Show Discovery & Requests
+              - title: Radarr
+                url: http://<lan-ip>:7878
+                same-tab: true
+                icon: si:radarr
+                description: Automated Movie Library Manager
+              - title: Sonarr
+                url: http://<lan-ip>:8989
+                same-tab: true
+                icon: si:sonarr
+                description: Automated TV Show & Anime Manager
+              - title: Prowlarr
+                url: http://<lan-ip>:9696
+                same-tab: true
+                icon: si:prowlarr
+                description: Centralized Tracker & Indexer Sync
+              - title: Bazarr
+                url: http://<lan-ip>:6767
+                same-tab: true
+                icon: si:sublimetext
+                description: Automated Multi-Language Subtitles
+              - title: Lidarr
+                url: http://<lan-ip>:8686
+                same-tab: true
+                icon: si:lidarr
+                description: Automated Music Album Manager
+              - title: qBittorrent
+                url: http://<lan-ip>:8085
+                same-tab: true
+                icon: si:qbittorrent
+                description: 24/7 Remote Torrent Downloader
+
+          - type: bookmarks
+            title: "🧠 Productivity, Notes & Smart Home"
+            color: 140 70% 45%
+            bookmarks:
+              - title: Docmost
+                url: http://<lan-ip>:3002
+                same-tab: true
+                icon: si:notion
+                description: Wiki & Collaborative Knowledge Base
+              - title: Hoarder
+                url: http://<lan-ip>:3030
+                same-tab: true
+                icon: si:pocket
+                description: AI-Powered Bookmark & Link Hoarder
+              - title: Home Assistant
+                url: http://<lan-ip>:8123
+                same-tab: true
+                icon: si:homeassistant
+                description: Smart Home Hub & Automation
+              - title: Vaultwarden
+                url: http://<lan-ip>:8083
+                same-tab: true
+                icon: si:bitwarden
+                description: Encrypted Password Manager
+              - title: FileBrowser
+                url: http://<lan-ip>:8082
+                same-tab: true
+                icon: si:files
+                description: Web File Manager for /mnt/storage
+              - title: Cloud WebPrint
+                url: http://<lan-ip>:8084
+                same-tab: true
+                icon: si:print
+                description: Zero-Config Mobile & Remote Web Printing
+              - title: CUPS Admin
+                url: http://<lan-ip>:631
+                same-tab: true
+                icon: si:cups
+                description: IPP Print Server & Hardware Diagnostics
+
+          - type: bookmarks
+            title: "🛠️ Administration, Monitoring & Remote Desktop"
+            color: 35 90% 50%
+            bookmarks:
+              - title: CasaOS
+                url: http://<lan-ip>
+                same-tab: true
+                icon: si:linux
+                description: Web Dashboard & System Overview
+              - title: Portainer CE
+                url: https://<lan-ip>:9443
+                same-tab: true
+                icon: si:docker
+                description: Advanced Docker Management UI
+              - title: Uptime Kuma
+                url: http://<lan-ip>:3001
+                same-tab: true
+                icon: si:statuspage
+                description: Service Health & Uptime Status
+              - title: AdGuard Home
+                url: http://<lan-ip>:8053
+                same-tab: true
+                icon: si:adguard
+                description: Network-Wide DNS Ad-Blocker
+              - title: Grafana
+                url: http://<lan-ip>:3005
+                same-tab: true
+                icon: si:grafana
+                description: Infrastructure Telemetry & Dashboards
+              - title: Sunshine Admin
+                url: https://<lan-ip>:47990
+                same-tab: true
+                icon: si:nvidia
+                description: Hardware-Accelerated Remote Desktop
+
+      # Right Column: RSS Feeds & Homelab News
+      - size: small
+        widgets:
+          - type: rss
+            title: "TechHut & Homelab News"
+            limit: 6
+            feeds:
+              - url: https://techhut.tv/rss
+                title: TechHut TV
+              - url: https://www.reddit.com/r/selfhosted/.rss
+                title: r/selfhosted
+              - url: https://news.ycombinator.com/rss
+                title: Hacker News
